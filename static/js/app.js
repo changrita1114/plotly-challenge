@@ -12,7 +12,7 @@ let getData = function (data, userId = "940") {
         otu_labels: user.otu_labels,
         wfreq: user.wfreq,
     }
-
+    console.log(combinedData)
     return userValues;
 };
 
@@ -55,6 +55,7 @@ let buildBubbleChart = function ({ sample_values, otu_ids, otu_labels }) {
 // Build a function to create a gauge chart
 let buildGaugeChart = function ({ wfreq }) {
     let trace3 = {
+        x: [0], y: [0],
         type: "pie",
         showlegend: false,
         hole: 0.4,
@@ -69,10 +70,46 @@ let buildGaugeChart = function ({ wfreq }) {
                 "#669900", "#339933", "#2d862d", "#267326", "white"],
         },
     };
-    let degrees = (180 - wfreq), radius = .5;
+
+    // let degrees = 180 - (wfreq - 1) * 45;
+    // // alert(degrees);
+    // radius = .5;
+    // let radians = degrees * Math.PI / 180;
+    // let x = radius * Math.cos(radians);
+    // let y = radius * Math.sin(radians);
+
+    // let mainPath = 'M -.0 -0.01 L .0 0.01 L ',
+    //     pathX = String(x),
+    //     space = " ",
+    //     pathY = String(y),
+    //     pathEnd = 'Z';
+    // let path = mainPath.concat(pathX, space, pathY, pathEnd);
+
+    // let layout = {
+    //     width: 600,
+    //     height: 500,
+    //     shapes: [{
+    //         type: 'path',
+    //         path: path,
+    //         fillcolor: '850000',
+    //         line: {
+    //             color: '850000'
+    //         }
+    //     }],
+    //     title: "Belly Button Washing Frequency Scrubs per week",
+    //     xaxis: {
+    //         type: 'category', zeroline: false, showticklabels: false,
+    //         showgrid: false, range: [-1, 1]
+    //     },
+    //     yaxis: {
+    //         type: 'category', zeroline: false, showticklabels: false,
+    //         showgrid: false, range: [-1, 1]
+    //     }
+    // };
+    let degrees = 90, radius = .5;
     let radians = degrees * Math.PI / 180;
     let x = radius * Math.cos(radians);
-    let y = radius * Math.sin(radians);
+    let y = radius * Math.sin(radians) * wfreq;
 
     let layout = {
         width: 600,
@@ -89,8 +126,8 @@ let buildGaugeChart = function ({ wfreq }) {
             }
         }],
         title: "Belly Button Washing Frequency Scrubs per week",
-        // xaxis: { visible: false, range: [-1, 1] },
-        // yaxis: { visible: false, range: [-1, 1] }
+        xaxis: { visible: false, range: [-1, 1] },
+        yaxis: { visible: false, range: [-1, 1] }
     };
 
     var chartData = [trace3];
@@ -137,7 +174,7 @@ let optionChanged = function (id) {
     })
 };
 
-// Build a function to render the page
+// Build a function to render the preview of the page
 let renderPage = function () {
     d3.json("data/samples.json").then(data => {
         let userData = getData(data)
