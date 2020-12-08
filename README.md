@@ -14,7 +14,9 @@ The dataset reveals that a small handful of microbial species (also called opera
 6. An update function was designed for updating all of the plots any time when a new sample is selected.
 
 ### References
-Hulcr, J. et al.(2012) _A Jungle in There: Bacteria in Belly Buttons are Highly Diverse, but Predictable_. Retrieved from: [http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/](http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/)
+Hulcr J., Latimer A.M., Henley J.B., Rountree N.R., Fierer N., et al. (2012) _A Jungle in There: Bacteria in Belly Buttons are Highly Diverse, but Predictable_. PLoS ONE 7(11): e47712. doi:10.1371/journal.pone.0047712
+
+[Dataset link](http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/)
 
 ## Disclaimer
 The resources of this master branch are only for educational purposes. All reserved rights belong to UCSD Data Science and Visualization Boot Camp.
