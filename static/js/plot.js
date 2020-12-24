@@ -12,7 +12,6 @@ let getData = function (data, userId = "940") {
         otu_labels: user.otu_labels,
         wfreq: user.wfreq,
     }
-    // console.log(combinedData)
     return userValues;
 };
 
@@ -25,8 +24,11 @@ let buildBarChart = function ({ sample_values, otu_ids, otu_labels }) {
         type: "bar",
         orientation: "h"
     }]
-
-    return Plotly.newPlot("bar", trace1);
+    let layout = {
+        title: "<b>Top 10 Bacteria Cultures Found</b>",
+        margin: { t: 30, l: 150 }
+    };
+    return Plotly.newPlot("bar", trace1, layout);
 }
 
 // Build a function to create a bubble chart
@@ -34,19 +36,21 @@ let buildBubbleChart = function ({ sample_values, otu_ids, otu_labels }) {
     let trace2 = [{
         x: otu_ids,
         y: sample_values,
-        type: "scatter",
         mode: "markers",
         text: otu_labels,
         marker: {
             color: otu_ids,
-            size: sample_values
+            size: sample_values,
+            colorscale: "Earth"
         }
     }]
 
     let layout = {
-        showlegend: false,
-        height: 600,
-        width: 1300
+        title: "<b>Bacteria Cultures Per Sample</b>",
+        margin: { t: 0 },
+        hovermode: "closest",
+        xaxis: { title: "OTU ID" },
+        margin: { t: 30 }
     };
 
     return Plotly.newPlot("bubble", trace2, layout);
@@ -54,50 +58,82 @@ let buildBubbleChart = function ({ sample_values, otu_ids, otu_labels }) {
 
 // Build a function to create a gauge chart
 let buildGaugeChart = function ({ wfreq }) {
+    // Enter the washing frequency between 0 and 180
+    let level = parseFloat(wfreq) * 20;
 
-    let trace3 = {
-        x: [0], y: [0],
-        type: "pie",
-        showlegend: false,
-        hole: 0.4,
-        rotation: 90,
-        values: [81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81],
-        text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
-        direction: "clockwise",
-        textinfo: "text",
-        textposition: "inside",
-        marker: {
-            colors: ["#fff9e6", "#fff2cc", "#ddddbb", "#c3c388", "#88cc00",
-                "#669900", "#339933", "#2d862d", "#267326", "white"],
-        },
-    };
-
-    let degrees = 90, radius = .5;
+    // Trig to calc meter point
+    let degrees = 180 - level;
+    let radius = .5;
     let radians = (degrees * Math.PI) / 180;
     let x = radius * Math.cos(radians);
-    let y = radius * Math.sin(radians) * wfreq;
+    let y = radius * Math.sin(radians);
+
+    // Path: may have to change to create a better triangle
+    let mainPath = "M -.0 -0.05 L .0 0.05 L "
+    let pathX = String(x);
+    let space = " ";
+    let pathY = String(y);
+    let pathEnd = " Z";
+    let path = mainPath.concat(pathX, space, pathY, pathEnd)
+
+
+    let trace3 = [
+        {
+            x: [0], y: [0],
+            type: "scatter",
+            marker: { size: 12, color: "850000" },
+            showlegend: false,
+            name: "Freq",
+            text: level,
+            hoverinfo: "text+name",
+        },
+        {
+            rotation: 90,
+            values: [81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81 / 9, 81],
+            text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
+            direction: "clockwise",
+            textinfo: "text",
+            textposition: "inside",
+            marker: {
+                colors: ["#fff9e6", "#fff2cc", "#ddddbb", "#c3c388", "#88cc00",
+                    "#669900", "#339933", "#2d862d", "#267326", "white"],
+            },
+            labels: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
+            hoverinfo: "label",
+            hole: 0.5,
+            type: "pie",
+            showlegend: false
+        }
+    ];
 
     let layout = {
-        width: 600,
+        width: 500,
         height: 500,
         shapes: [{
-            type: 'line',
-            x0: 0.5,
-            y0: 0.5,
-            x1: x,
-            y1: y,
+            type: 'path',
+            path: path,
+            fillcolor: "850000",
             line: {
-                color: 'darkred',
-                width: 5
+                color: "850000"
             }
         }],
-        title: "Belly Button Washing Frequency Scrubs per week",
-        xaxis: { visible: false, range: [-1, 1] },
-        yaxis: { visible: false, range: [-1, 1] }
+        title: "<b>Belly Button Washing Frequency</b> <br> Scrubs per week",
+        xaxis: {
+            zeroline: false,
+            showticklabels: false,
+            showgrid: false,
+            range: [-1, 1]
+        },
+        yaxis: {
+            zeroline: false,
+            showticklabels: false,
+            showgrid: false,
+            range: [-1, 1]
+        }
     };
 
-    var chartData = [trace3];
-    return Plotly.newPlot("gauge", chartData, layout);
+    // var chartData = [trace3];
+    return Plotly.newPlot("gauge", trace3, layout);
 
 }
 // Build a function to claer demographic info box
