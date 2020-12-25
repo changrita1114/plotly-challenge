@@ -5,6 +5,10 @@ An interactive dashboard to explore [Belly Button Biodiversity dataset](http://r
 
 The dataset reveals that a small handful of microbial species (also called operational taxonomic units(OTUs) in the study) were present in more than 70% of people, while the rest were relatively rare.
 
+### Visualization
+
+![dashboard](image/dashboard.gif)
+
 ### Steps: Present the Data Using Plotly and JavaScript
 1. The D3.js was used to read in [samples.json](data/samples.json).
 2. A horizontal bar chart with a dropdown menu was created to display the top 10 OTUs found in that individual.
